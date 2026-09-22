@@ -145,8 +145,9 @@ uv run ruff format .                    # Format
 uv run mypy portolan_cli                # Type check
 uv run deptry .                         # Check dependencies (unused, missing, transitive)
 uv run vulture portolan_cli tests       # Dead code
-uv run xenon --max-absolute=C portolan_cli  # Complexity
-uv run pylint --disable=all --enable=duplicate-code portolan_cli/  # Duplicate code
+uvx jscpd@5.2.1 portolan_cli tests \
+  --baseline .jscpd-baseline.json \
+  --fail-on-new-clones 0            # Duplicate code
 
 # Iceberg backend development
 uv sync --extra iceberg --extra dev     # Install with iceberg deps
@@ -158,8 +159,9 @@ uv run cz commit                        # Interactive commit
 uv run cz bump --dry-run                # Preview version bump
 
 # Docs
-uv run mkdocs serve                     # Local docs server
-uv run mkdocs build                     # Build docs
+uv run zensical serve                   # Local docs server
+uv run zensical build --strict --clean  # Build docs
+uv run pytest tests/docs/test_site_build.py  # Verify the built site
 ```
 
 ## Project Structure
@@ -180,7 +182,7 @@ portolan-cli/
 │   ├── benchmark/         # Performance measurements
 │   ├── snapshot/          # Snapshot tests
 │   └── iceberg/           # Iceberg backend tests (unit, integration, e2e)
-├── docs/                  # PUBLIC documentation (mkdocs) - tutorials, user guides
+├── docs/                  # PUBLIC documentation (Zensical) - tutorials, user guides
 ├── context/               # AI/INTERNAL development context
 │   └── shared/            # Plans, research, reports
 │       ├── documentation/ # CI, tooling, maintainer rationale
@@ -188,8 +190,22 @@ portolan-cli/
 └── .github/workflows/     # CI/CD pipelines
 ```
 
-`docs/` is public (mkdocs); `context/` is internal AI-oriented context. See
+`docs/` is public (Zensical); `context/` is internal AI-oriented context. See
 `.claude/rules/documentation.md` for the full distinction and where to file things.
+
+## Synced brand files
+
+The sync in portolan-ops owns these four files. They carry no `ops-sync` marker,
+because a CSS file and an SVG file cannot hold a Markdown comment in a place
+that a reader sees. Do not edit them here. Edit the source in portolan-ops and
+let the sync run.
+
+- `docs/assets/stylesheets/_brand-vars.css`
+- `docs/assets/images/portolan-logomark-4163cc.svg`
+- `docs/assets/images/portolan-logomark-fcfcfa.svg`
+- `docs/assets/images/portolan-logo-horizontal-light.svg`
+
+`context/shared/documentation/branding.md` records how the site applies them.
 
 ## Before Writing Code
 
@@ -228,7 +244,7 @@ Always research before implementing:
 - **ALL** non-obvious decisions are recorded where they apply (see `.claude/rules/documentation.md`)
 - **NO** new dependencies without discussion
 
-<!-- freshness: last-verified: 2026-09-09 -->
+<!-- freshness: last-verified: 2026-09-22 -->
 ## Design Principles
 
 | Principle | Meaning |
@@ -256,3 +272,5 @@ See `context/shared/known-issues/` for tracked issues. Key ones:
 | [geoparquet-io drops CRS on write](context/shared/known-issues/geoparquet-io-write-drops-crs.md) | Resolved in geoparquet-io 1.4.0. The rewrite fidelity gate stays, because it guards a destructive operation |
 | [DuckDB 1.5.5 ST_Read_Meta segfault](context/shared/known-issues/duckdb-155-st-read-meta-segfault.md) | Kills the process on malformed vector input, with no catchable error; pinned to `duckdb<1.5.5` |
 | [geoparquet-io S2 unavailable](context/shared/known-issues/geoparquet-io-s2-unavailable.md) | `add s2` and `partition s2` stop with an explanation. The DuckDB `geography` extension is not published for `duckdb>=1.5.2`. Use `a5` |
+| [ArcGIS ImageServer exportImage 5xx](context/shared/known-issues/arcgis-imageserver-export-5xx.md) | Large or parallel `exportImage` requests fail with HTTP 500 on some servers. Re-run with `--resume`, and lower `--tile-size` or `--max-concurrent` |
+| [lerc has no Linux aarch64 binary](context/shared/known-issues/lerc-platform-support.md) | `extract arcgis` cannot read a LERC tile cache on Linux aarch64. GDAL cannot decode LERC2 v6, so the path needs the `lerc` package, whose wheel includes no aarch64 binary |
