@@ -1,74 +1,27 @@
 <!-- ops-sync:begin — synced from portolan-sdi/portolan-ops. Edit there, not here. -->
 # Portolan agent norms
 
-These rules apply to AI agents working in any portolan-sdi repo. Every downstream repo repeats this text verbatim as a synced block at the top of its own `AGENTS.md`. Repo-specific instructions live below the block and override the canonical rules in that repo only.
-
-Claude Code does not read `AGENTS.md`. Each repo has a one-line `CLAUDE.md` that imports it instead. Put repo-specific instructions in `AGENTS.md`, never in `CLAUDE.md`, which the sync overwrites.
+All agents MUST read this document before starting work, with no exceptions, ever. (Claude Code does not read `AGENTS.md` but imports this file via a one-line `CLAUDE.md`.) Most of this content is synced downstream from `portolan-ops`. Put repo-specific instructions in `AGENTS.md`, never in `CLAUDE.md`, which the sync overwrites.
 
 ## Ground rules
 
-The [portolan-spec](https://github.com/portolan-sdi/portolan-spec) repo is ground truth for the Portolan specification. The CLI, `rashid`, the registry, and every other tool implement the specification. They are downstream of it. Never describe the CLI as the source of truth. Propose spec changes in portolan-spec.
+Agents MUST read the complete contents of [norms](https://github.com/portolan-sdi/portolan-ops/blob/main/norms) and [policies](https://github.com/portolan-sdi/portolan-ops/blob/main/policies/) before starting work, with no exceptions, ever.
 
-Before documenting any command, flag, or API, verify it exists in the released tool. A fabricated example persists beyond the session that wrote it.
+The [portolan-spec](https://github.com/portolan-sdi/portolan-spec) repo is the absolute ground truth for the Portolan spec. All other tools are downstream of it.
 
-Every repo uses Apache-2.0 except portolan-browser and portolan-nl-demo, which are ISC forks. See [norms/repos.md](https://github.com/portolan-sdi/portolan-ops/blob/main/norms/repos.md) for the record. Never introduce code under another license without a human decision recorded there.
+Before documenting any command, flag, or API, verify that it exists.
 
-Never bypass pre-commit hooks or CI gates. Green means green.
+Use conventional commits always.
 
-Write commits in conventional form. Squash-merge makes the pull request title become the commit message.
-
-## Pull requests and issues
-
-Write every issue and pull request in two layers. The human layer first states what is wrong or missing. It explains why the problem matters and what should happen instead. Someone who did not follow your investigation should understand it in about a minute. The agent layer then provides evidence and implementation detail. It also records constraints, edge cases, and verification.
-
-There is no word limit. A 700-word issue is good when its first 150 words make the outcome obvious. A 150-word issue is bad when it compresses the meaning into prose the reader has to unpack. Optimize for fast comprehension, not for short tickets.
-
-Write them in Simplified Technical English (ASD-STE100). The rules are an output style, `.claude/output-styles/simplified-technical-english.md`, which every repo receives. A hook prints it at session start. Sentences run under 20 words and express one idea. Use the active voice, and use only the infinitive, the imperative, and simple tenses. Use a verb rather than a noun made from a verb. Keep the technical content exactly as precise as it was, and simplify only the language around it. Describe the design as it stands now rather than the approaches you discarded.
-
-The structural contract CI enforces on a pull request:
-
-- The sections `## What changed`, `## Why`, and `## Verification` exist and are not empty.
-- The prose references the issue the change resolves, as `#N` or its URL.
-- Verification pastes the command you ran and its output in a fenced block under `## Verification`. It identifies the data it read, as a URL or catalog path.
-- A change that alters no behavior ticks the waiver checkbox instead. Keep its wording intact because the check matches the phrase "does not alter behavior".
-
-Good evidence shows the fix works against real data. Proving a command exits zero is not enough. Take the failing command from the issue, run it against the same catalog, and show it now succeeds. A wall of pytest output does not count.
-
-Issues follow the same shape. A bug report shows the failure and identifies the data. Write a feature request to show what the current tool cannot do, or what the workaround costs. A task states the outcome and the command that proves it is done.
-
-Each repo uses the org issue template. The language itself is checked before a body is ever filed: `.claude/hooks/writing_check.py` runs on `gh issue create` and `gh pr create`, and reports the specific problems it found. Run `writing_check.py --print-rules` to read the rules. When it is wrong about a line, say so in the body with `<!-- ste-ok: RULE_ID why this is correct -->`. Dependabot is exempt from the CI check.
-
-That check matches words and punctuation, but cannot assess tone or padding. It also cannot assess prose that argues for its own value. Passing proves nothing about how the body reads. Read what you wrote before you file it. Cut sentences that only make the change sound good.
-
-## Documentation
-
-Agents writing or restructuring documentation follow two exemplars named in [norms/docs.md](https://github.com/portolan-sdi/portolan-ops/blob/main/norms/docs.md). [obstore](https://github.com/developmentseed/obstore) demonstrates a concise, human-readable README that delegates to good docs elsewhere. [scaffold-docs-skill](https://github.com/dbreunig/scaffold-docs-skill) shows how to build docs that have a clear human-facing surface, maintain examples via tests so they never drift, and auto-generate API docs instead of duplicating them. Both make documentation easy to maintain and easy to update. Draft top-down with human review between layers. Do not draft a README from a generic template or from memory.
-
-These rules apply to every docs change. Use sentence-case headings without emoji. Use absolute dates like "in July 2026", never "recently". Run every command example against the released tool before you publish it.
-
-## Voice and messaging
-
-Every written artifact follows the prose rules in [norms/prose.md](https://github.com/portolan-sdi/portolan-ops/blob/main/norms/prose.md). Vale checks Markdown and website copy. The writing hook checks the prose in issues and pull requests. Apply the rules while drafting, not as cleanup.
-
-Before drafting substantial public copy like a README, a docs page, or an announcement, fetch and read [norms/prose.md](https://github.com/portolan-sdi/portolan-ops/blob/main/norms/prose.md) and [copy/messaging.md](https://github.com/portolan-sdi/portolan-ops/blob/main/copy/messaging.md) in full. If you cannot fetch them, say so and stop. Write from the actual files, not from memory.
-
-How Portolan is described comes from [copy/messaging.md](https://github.com/portolan-sdi/portolan-ops/blob/main/copy/messaging.md) alone.
+All tickets and PRs MUST follow the [templates](https://github.com/portolan-sdi/portolan-ops/blob/main/templates/).
 
 ## Org-wide facts
 
-The canonical homepage is https://www.portolan-sdi.org/. Canonical URLs live in [copy/urls.md](https://github.com/portolan-sdi/portolan-ops/blob/main/copy/urls.md). Do not hardcode variants.
+The canonical homepage is <https://www.portolan-sdi.org/>. Canonical URLs live in [copy/urls.md](https://github.com/portolan-sdi/portolan-ops/blob/main/copy/urls.md). Do not hardcode variants.
 
 Community discussion happens in the [Portolan Google Group](https://groups.google.com/g/portolan) and the [Portolan channel](https://cloudnativegeo.slack.com/archives/C0A1JBH9529) in Cloud-Native Geo Slack. Planning happens in [org-level GitHub projects](https://github.com/orgs/portolan-sdi/projects/1).
 
-## Contribution rules
-
-The [AI policy](https://github.com/portolan-sdi/portolan-ops/blob/main/policies/AI_POLICY.md) applies to every contribution. An agent may draft the diff and the pull request body. A human must read, understand, and approve both before review is requested. Agents never open PRs, post comments, or take action in shared spaces without human approval.
-
-Follow the [contributing guide](https://github.com/portolan-sdi/portolan-ops/blob/main/policies/CONTRIBUTING.md) and the [code of conduct](https://github.com/portolan-sdi/portolan-ops/blob/main/policies/CODE_OF_CONDUCT.md).
-
-## Sync discipline
-
-Files between `ops-sync` markers are synced from [portolan-ops](https://github.com/portolan-sdi/portolan-ops). They are overwritten on every sync run. To change one, edit it in portolan-ops, never in place.
+Files between `ops-sync` markers are synced from [portolan-ops](https://github.com/portolan-sdi/portolan-ops). They are overwritten on every sync run. To change one, edit it in portolan-ops.
 
 One canonical home per fact. If a value like a color, URL, or policy line exists in portolan-ops, link to it rather than copying it.
 <!-- ops-sync:end -->
@@ -120,10 +73,9 @@ AI agents will write most of the code. Human review does not scale to match AI o
 | **Roadmap** | [GitHub Issues](https://github.com/portolan-sdi/portolan-cli/issues?q=label%3Aroadmap%3Amvp%2Croadmap%3Anext%2Croadmap%3Afuture) |
 | Contributing guide | `docs/contributing.md` |
 | Architecture | `pyproject.toml` [tool.importlinter] + `.claude/rules/architecture.md` |
-| CI/CD documentation | `context/shared/documentation/ci.md` |
-| **Real-world test fixtures** | `context/shared/documentation/test-fixtures.md` |
-| Maintainer rationale | `context/shared/documentation/` |
-| Plans & research | `context/shared/` |
+| CI/CD | `.github/workflows/` and `prek.toml`, with rationale in comments |
+| **Real-world test fixtures** | `tests/fixtures/realdata/README.md` |
+| Maintainer rationale | Module docstrings and comments at the enforcing site |
 
 **Target Python version:** 3.10+ (matches geoparquet-io dependency)
 
@@ -184,15 +136,12 @@ portolan-cli/
 │   ├── snapshot/          # Snapshot tests
 │   └── iceberg/           # Iceberg backend tests (unit, integration, e2e)
 ├── docs/                  # PUBLIC documentation (Zensical) - tutorials, user guides
-├── context/               # AI/INTERNAL development context
-│   └── shared/            # Plans, research, reports
-│       ├── documentation/ # CI, tooling, maintainer rationale
-│       └── known-issues/  # Tracked issues and environment constraints
 └── .github/workflows/     # CI/CD pipelines
 ```
 
-`docs/` is public (Zensical); `context/` is internal AI-oriented context. See
-`.claude/rules/documentation.md` for the full distinction and where to file things.
+`docs/` is public (Zensical). Docstrings and comments next to the code record
+the internal rationale. See `.claude/rules/documentation.md` for
+where to file things.
 
 ## Synced brand files
 
@@ -206,7 +155,8 @@ let the sync run.
 - `docs/assets/images/portolan-logomark-fcfcfa.svg`
 - `docs/assets/images/portolan-logo-horizontal-light.svg`
 
-`context/shared/documentation/branding.md` records how the site applies them.
+Comments in `mkdocs.yml` and `docs/assets/stylesheets/extra.css` record how
+the site applies them.
 
 ## Before Writing Code
 
@@ -216,8 +166,8 @@ Always research before implementing:
 2. **Search for patterns** — Check if similar functionality exists
 3. **Check utilities** — Review `portolan_cli/` first
 4. **Review existing tests** — Look at tests for the area you're modifying
-5. **Check the rationale** — Read `context/shared/documentation/` and the
-   relevant `.claude/rules/*.md` to understand past decisions
+5. **Check the rationale** — Read the module docstrings and the relevant
+   `.claude/rules/*.md` to understand past decisions
 
 ## Testing
 
@@ -246,7 +196,7 @@ Always research before implementing:
 - **ALL** non-obvious decisions are recorded where they apply (see `.claude/rules/documentation.md`)
 - **NO** new dependencies without discussion
 
-<!-- freshness: last-verified: 2026-10-12 -->
+<!-- freshness: last-verified: 2026-10-14 -->
 ## Design Principles
 
 | Principle | Meaning |
@@ -261,18 +211,13 @@ Always research before implementing:
 
 ## Known Issues
 
-See `context/shared/known-issues/` for tracked issues. Key ones:
+Each upstream bug and accepted limit is recorded at its workaround, with the
+upstream issue URL where one exists. The record is a dependency pin comment in
+`pyproject.toml`, a comment or docstring at the workaround in `portolan_cli/`, a
+`skipif` reason, or an `xfail(strict=True)` reason. A strict `xfail` fails CI once
+upstream fixes the bug. List them with:
 
-| Issue | Impact |
-|-------|--------|
-| [PyArrow v22+ ABI](context/shared/known-issues/pyarrow-abseil-abi.md) | Import failures on Ubuntu 22.04; pinned to `<22.0.0` |
-| [geoparquet-io Windows segfault](context/shared/known-issues/geoparquet-io-windows-segfault.md) | Crashes on malformed input; test skipped on Windows |
-| [geoparquet-io macOS abort](context/shared/known-issues/geoparquet-io-macos-abort.md) | Aborts on multilayer conversion; test skipped on macOS |
-| [PySTAC absolute paths](context/shared/known-issues/pystac-absolute-paths.md) | Leaks local paths in output; use manual JSON construction |
-| [DuckDB "Query interrupted" transient](context/shared/known-issues/duckdb-query-interrupted-transient.md) | Rare (~1/1000) transient interrupt during bulk conversion; bounded retry in `run_with_transient_convert_retry` |
-| [ESRI GDB rasters](context/shared/known-issues/esri-gdb-rasters.md) | Unreadable without GDAL and undetected; `.gdb` routes to the vector pipeline |
-| [geoparquet-io drops CRS on write](context/shared/known-issues/geoparquet-io-write-drops-crs.md) | Resolved in geoparquet-io 1.4.0. The rewrite fidelity gate stays, because it guards a destructive operation |
-| [DuckDB 1.5.5 ST_Read_Meta segfault](context/shared/known-issues/duckdb-155-st-read-meta-segfault.md) | Resolved in DuckDB 1.5.6. The `duckdb>=1.5.6` floor keeps 1.5.5 out |
-| [geoparquet-io add_kdtree on a converted table](context/shared/known-issues/geoparquet-io-add-kdtree-convert.md) | A non-partitioned `kdtree` index fails with `ST_Centroid(BLOB)`. Partitioned kdtree works. Upstream geoparquet-io#1222 |
-| [ArcGIS ImageServer exportImage 5xx](context/shared/known-issues/arcgis-imageserver-export-5xx.md) | Large or parallel `exportImage` requests fail with HTTP 500 on some servers. Re-run with `--resume`, and lower `--tile-size` or `--max-concurrent` |
-| [lerc has no Linux aarch64 binary](context/shared/known-issues/lerc-platform-support.md) | `extract arcgis` cannot read a LERC tile cache on Linux aarch64. GDAL cannot decode LERC2 v6, so the path needs the `lerc` package, whose wheel includes no aarch64 binary |
+```bash
+git grep -nE "xfail\(|skipif\(|upstream" -- \
+  pyproject.toml portolan_cli tests
+```
